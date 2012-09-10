@@ -29,8 +29,6 @@ void unsafe()
 
 		printf("Status: %c \n", guessedRight);
 	}
-
-	delete [] buffer;
 }
 
 void safe()
@@ -38,30 +36,30 @@ void safe()
 	srand(time(NULL));
 	number = rand() % 10;
 	char guessedRight = '0';
-	char *buffer = new char[2];
+	char buffer[2];
 
 	while(guessedRight == '0') {
 		// NOTE: gets_s is only since recent in the C standard. (ISO/IEC 9899:2011)
-		if(gets_s(buffer, 2) == 0)
-		{
-			printf("This is safe, so stop fooling around.\n");
-		}
-
+		gets_s(buffer, 2);
+		//fgets(buffer, sizeof(buffer), stdin);
+		//
+		//char c = getchar();
+		//while(c != '\n' && c != EOF)
+		//	c = getchar();
+		
 		hint(atoi(buffer));
-
+		
 		if(atoi(buffer) == number)
 			guessedRight = '1';
 
 		printf("Status: %c\n", guessedRight);
 	}
-
-	delete [] buffer;
 }
 
 int main(int argc, char *argv[])
 {
 	printf("Guess the number\n");
-	safe();
+	unsafe();
 	printf("Congrats, you've found it.\n");
 	system("pause");
 }
