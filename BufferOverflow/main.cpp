@@ -29,6 +29,8 @@ void unsafe()
 
 		printf("Status: %c \n", guessedRight);
 	}
+
+	delete [] buffer;
 }
 
 void safe()
@@ -59,7 +61,7 @@ void safe()
 int main(int argc, char *argv[])
 {
 	printf("Guess the number\n");
-	unsafe();
+	safe();
 	printf("Congrats, you've found it.\n");
 	system("pause");
 }
