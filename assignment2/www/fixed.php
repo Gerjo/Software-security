@@ -4,8 +4,13 @@ session_name("fixed-session");
 session_start();
 
 function generateCsrfToken() {
+    // Meh. Who runs PHP on windows anyway. --Gerjo
     $urandom = fopen('/dev/urandom', 'r');
     $data    = base64_encode(fread($urandom, 27));
+
+    // Nico: Unrelated random wiki article:
+    // http://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization
+    // --Gerjo
     fclose($urandom);
     return $data;
 }
@@ -31,14 +36,15 @@ function generateCsrfToken() {
 
 if(isset($_GET['logout'])) {
     if($_SESSION["auth"] === true) {
-        if(isset($_GET['token'], $_SESSION['csrf-token']) && $_GET['token'] == $_SESSION['csrf-token']) {
+        if(isset($_GET['token'], $_SESSION['csrf-token'])
+                && $_GET['token'] == $_SESSION['csrf-token']) {
             session_destroy();
             session_start();
             session_regenerate_id();
             print "Thou hast logged out.<br>";
         } else {
             print "One does not simply use CSRF to force a logout. <br>";
-            exit();
+            exit;
         }
     } else {
         print "You're not even logged in. <br>";
@@ -50,6 +56,8 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $meh) {
     print "Some gentle error handling here. Mostlikely the database is offline :( <br>";
+
+    // Don't bother with anything else, since the database isn't working.
     exit;
 }
 
