@@ -3,8 +3,12 @@
 session_name("fixed-session");
 session_start();
 
-// Seeding ought to be done better, but for all intents and purposes, this works.
-define("CSRF_TOKEN", md5($_SERVER['REMOTE_ADDR'] . "jfoegpiewjg" .  $_SERVER['HTTP_USER_AGENT']));
+function generateCsrfToken() {
+    $urandom = fopen('/dev/urandom', 'r');
+    $data    = base64_encode(fread($urandom, 27));
+    fclose($urandom);
+    return $data;
+}
 
 ?>
 <html>
@@ -60,7 +64,7 @@ if(isset($_POST['username'], $_POST['password'])) {
             if($row != false) {
                 $_SESSION["auth"]       = true;
                 $_SESSION['username']   = $row['username'];
-                $_SESSION['csrf-token'] = CSRF_TOKEN;
+                $_SESSION['csrf-token'] = generateCsrfToken();
             } else {
                 print "Access denied! <br>";
                 $_SESSION["auth"] = false;
@@ -81,7 +85,7 @@ if($_SESSION["auth"] !== true) { ?>
     <input type="submit" name="submit" value="Commence Forth">
 
 <?php } else { ?>
-    <?=$_SESSION["username"]?>, thou art logged in. <a href="?logout=true&token=<?=CSRF_TOKEN?>"> Logout</a>.
+    <?=$_SESSION["username"]?>, thou art logged in. <a href="?logout=true&token=<?=$_SESSION['csrf-token']?>"> Logout</a>.
 <?php } ?>
 
 </form>
