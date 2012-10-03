@@ -50,7 +50,7 @@ try {
 
 
 if(isset($_POST['username'], $_POST['password'])) {
-    if(preg_match("/[:alnum:]{1,}/", $_POST['username'])) {
+    if(preg_match("#[a-z0-9]{1,}#i", $_POST['username'])) {
          try {
             $sth = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
             $sth->execute(array($_POST['username'], $_POST['password']));
