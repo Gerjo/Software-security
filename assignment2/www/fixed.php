@@ -46,6 +46,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $meh) {
     print "Some gentle error handling here. Mostlikely the database is offline :( <br>";
+    exit;
 }
 
 
