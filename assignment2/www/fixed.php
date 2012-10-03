@@ -41,8 +41,13 @@ if(isset($_GET['logout'])) {
     }
 }
 
-$pdo = new PDO('sqlite:../database.db');
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+try {
+    $pdo = new PDO('sqlite:../database.db');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $meh) {
+    print "Some gentle error handling here. Mostlikely the database is offline :( <br>";
+}
+
 
 if(isset($_POST['username'], $_POST['password'])) {
     if(preg_match("/[:alnum:]{1,}/", $_POST['username'])) {
@@ -60,7 +65,7 @@ if(isset($_POST['username'], $_POST['password'])) {
                 $_SESSION["auth"] = false;
             }
          } catch(PDOException $meh) {
-             print "Some gentle error message here. <br>";
+             print "Some gentle error handling here. <br>";
          }
     } else {
         print "Usernames consist of 1 to 60 alphanumeric characters.<br>";
